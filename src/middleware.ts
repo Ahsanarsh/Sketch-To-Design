@@ -11,11 +11,13 @@ export default convexAuthNextjsMiddleware(async (request,{convexAuth})=>{
 
     const authed = await convexAuth.isAuthenticated()
 
-    if(PublicMatcher(request) && !authed){
-    return nextjsMiddlewareRedirect(request,"./dashboard")
+    // Authenticated users visiting auth/public pages → send to dashboard
+  if(PublicMatcher(request) && authed){
+    return nextjsMiddlewareRedirect(request,"/dashboard")
   }
+  // Unauthenticated users visiting protected pages → send to sign-in
   if(ProtectedMatcher(request) && !authed){
-    return nextjsMiddlewareRedirect(request,"./auth/sign-in")
+    return nextjsMiddlewareRedirect(request,"/auth/sign-in")
   }
   return 
   {cookieConfig: {

@@ -97,6 +97,7 @@ export const useAuth = () => {
     signInForm,
     signUpForm,
     handleSignIn,
+    handleSignUp,
     handleSignOut,
     isLoading,
     setIsLoading,
