@@ -55,7 +55,9 @@ const schema = defineSchema({
     isPublic: v.optional(v.boolean()), // For fut...
     tags: v.optional(v.array(v.string())), // For...
     projectNumber: v.number(), // Auto-incrementi...
-  }).index("by_userId", ["userId"]),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_userId_lastModified", ["userId", "lastModified"]),
   project_counter: defineTable({
     userId: v.id("users"),
     nextProjectNumber: v.number(),
