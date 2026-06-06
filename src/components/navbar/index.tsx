@@ -27,15 +27,19 @@ const Navbar = (props: Props) => {
 
   const me = useAppSelector((state) => state.profile);
 
+  // Extract session slug from current URL: /dashboard/{slug}/...
+  const pathSegments = pathname.split("/");
+  const sessionSlug = pathSegments[2] || me.user?.name || "";
+
   const tabs: TabProps[] = [
     {
       label: "Canvas",
-      href: `/dashboard//canvas?project=${projectId}`,
+      href: `/dashboard/${sessionSlug}?project=${projectId}`,
       icon: <Hash className="h-4 w-4" />,
     },
     {
       label: "Style Guide",
-      href: `/dashboard//style-guide?project=${projectId}`,
+      href: `/dashboard/${sessionSlug}/style-guide?project=${projectId}`,
       icon: <LayoutTemplate className="h-4 w-4" />,
     },
   ];
@@ -54,7 +58,7 @@ const Navbar = (props: Props) => {
     <div className="grid grid-cols-2 lg:grid-cols-3 p-6 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center gap-4">
         <Link
-          href={`/dashboard/${me.name}`}
+          href={`/dashboard/${sessionSlug}`}
           className="w-8 h-8 rounded-full border-3 border-white bg-black flex items-center justify-center"
         >
           <div className="w-4 h-4 rounded-full bg-white"></div>

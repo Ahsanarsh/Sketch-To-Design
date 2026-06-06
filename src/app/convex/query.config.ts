@@ -4,6 +4,7 @@ import { api } from '../../../convex/_generated/api'
 import { ConvexUserRaw, normalizeProfile } from '@/types/user'
 import { Id } from '../../../convex/_generated/dataModel'
 
+
 export const ProfileQuery = async () => {
   return await preloadQuery(
     api.user.getCurrentUser,
@@ -21,7 +22,7 @@ export const SubscriptionEntitlementQuery = async () => {
     { userId: profile?.id as Id<'users'> },
     { token: await convexAuthNextjsToken() }
   )
-  return {entitlement, profileName: profile?.name}
+  return { entitlement, profileName: profile?.name }
 }
 
 export const ProjectsQuery = async () => {
@@ -39,4 +40,24 @@ export const ProjectsQuery = async () => {
     { token: await convexAuthNextjsToken() }
   )
   return { projects, profile }
+}
+
+export const StyleGuideQuery = async (projectId: string) => {
+  const styleGuide = await preloadQuery(
+    api.project.getProjectStyleGuide,
+    { projectId: projectId as Id<'projects'> },
+    { token: await convexAuthNextjsToken() }
+  )
+
+  return { styleGuide }
+}
+
+export const MoodBoardImagesQuery = async (projectId: string) => {
+  const images = await preloadQuery(
+    api.moodboard.getMoodBoardImages,
+    { projectId: projectId as Id<'projects'> },
+    { token: await convexAuthNextjsToken() }
+  )
+
+  return { images }
 }
