@@ -10,7 +10,7 @@ export const ColorSwatch = ({ name, value, className }: ColorSwatchProps) => {
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <div
-        className="w-12 h-12 rounded-lg border border-border/20 flex-shrink-0"
+        className="w-12 h-12 rounded-lg border border-border/20 shrink-0"
         style={{ backgroundColor: value }}
       />
       <div className="space-y-1 min-w-0 flex-1">

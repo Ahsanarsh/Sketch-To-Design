@@ -169,13 +169,13 @@ export default function HomePage() {
                 <p className="text-xs uppercase tracking-widest text-white/30">
                   AI Output
                 </p>
-                <div className="relative w-full overflow-hidden rounded-xl bg-gradient-to-br from-[oklch(0.18_0_0)] to-[oklch(0.14_0_0)] p-3 shadow-inner">
+                <div className="relative w-full overflow-hidden rounded-xl bg-linear-to-br from-[oklch(0.18_0_0)] to-[oklch(0.14_0_0)] p-3 shadow-inner">
                   {/* Mini UI mockup */}
-                  <div className="mb-2 h-6 w-full rounded-md bg-gradient-to-r from-[oklch(0.65_0.22_280)] to-[oklch(0.55_0.22_320)] opacity-90" />
+                  <div className="mb-2 h-6 w-full rounded-md bg-linear-to-r from-[oklch(0.65_0.22_280)] to-[oklch(0.55_0.22_320)] opacity-90" />
                   <div className="grid grid-cols-5 gap-1.5">
                     <div className="col-span-3 row-span-2 h-28 rounded-md bg-white/8" />
                     <div className="col-span-2 h-[52px] rounded-md bg-white/5" />
-                    <div className="col-span-2 h-[52px] rounded-md bg-gradient-to-br from-[oklch(0.65_0.22_280)/50] to-[oklch(0.55_0.22_320)/50]" />
+                    <div className="col-span-2 h-[52px] rounded-md bg-linear-to-br from-[oklch(0.65_0.22_280)/50] to-[oklch(0.55_0.22_320)/50]" />
                   </div>
                 </div>
               </div>

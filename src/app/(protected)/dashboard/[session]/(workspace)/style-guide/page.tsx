@@ -3,17 +3,35 @@ import {
   StyleGuideQuery,
 } from "@/app/convex/query.config";
 import { ThemeContent } from "@/components/style/theme";
+import StyleGuideTypography from "@/components/style/typography";
 import { TabsContent } from "@/components/ui/tabs";
 import { StyleGuide, MoodBoardImage } from "@/redux/api/style-guide";
 import { Palette } from "lucide-react";
 import React from "react";
 
 type props = {
-  searchParams: Promise<{ projectId: string }>;
+  searchParams: Promise<{ project: string }>;
 };
 
 const Page = async (props: props) => {
-  const projectId = await (await props.searchParams).projectId;
+  const projectId = (await props.searchParams).project;
+
+  if (!projectId || projectId === "null") {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-muted flex items-center justify-center">
+          <Palette className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-medium text-foreground mb-2">
+          No project selected
+        </h3>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto text-center">
+          Select a project to view its style guide.
+        </p>
+      </div>
+    );
+  }
+
   const existingStyleGuide = await StyleGuideQuery(projectId);
 
   const guide = existingStyleGuide.styleGuide
@@ -44,9 +62,10 @@ const Page = async (props: props) => {
           </div>
         ) : (
           <ThemeContent colorGuide={colorGuide} />
-
-          // <h1>theme content</h1>
         )}
+      </TabsContent>
+      <TabsContent value="typography">
+        <StyleGuideTypography typographyGuide={} />
       </TabsContent>
     </div>
   );
