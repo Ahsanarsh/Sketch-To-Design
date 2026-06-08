@@ -22,10 +22,17 @@ type Props = {};
 
 const Navbar = (props: Props) => {
   const params = useSearchParams();
-  const projectId = params.get("project");
+  const urlProjectId = params.get("project");
   const pathname = usePathname();
 
   const me = useAppSelector((state) => state.profile);
+  const projects = useAppSelector((state) => state.projects.projects);
+
+  // Use URL project ID, or fall back to the first project from Redux store
+  const projectId =
+    urlProjectId && urlProjectId !== "null"
+      ? urlProjectId
+      : projects[0]?._id || null;
 
   // Extract session slug from current URL: /dashboard/{slug}/...
   const pathSegments = pathname.split("/");
@@ -34,7 +41,7 @@ const Navbar = (props: Props) => {
   const tabs: TabProps[] = [
     {
       label: "Canvas",
-      href: `/dashboard/${sessionSlug}?project=${projectId}`,
+      href: `/dashboard/${sessionSlug}/canvas?project=${projectId}`,
       icon: <Hash className="h-4 w-4" />,
     },
     {
@@ -70,6 +77,7 @@ const Navbar = (props: Props) => {
             </div>
           ))}
       </div>
+
       <div className="lg:flex hidden items-center justify-center gap-2">
         <div className="flex items-center gap-2 backdrop-blur-xl bg-white/8 border border-white/12 rounded-full p-2 saturate-150">
           {tabs.map((t) => (
