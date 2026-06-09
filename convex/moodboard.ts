@@ -1,5 +1,5 @@
 import { getAuthUserId } from "@convex-dev/auth/server"
-import { query } from "./_generated/server"
+import { mutation, query } from "./_generated/server"
 import { v } from "convex/values"
 
 export const getMoodBoardImages = query({
@@ -36,5 +36,94 @@ export const getMoodBoardImages = query({
         return images
             .filter((image) => image !== null)
             .sort((a, b) => a!.index - b!.index)
+    },
+})
+
+export const generateUploadUrl = mutation({
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx)
+        if (!userId) {
+            throw new Error('Not authenticated')
+        }
+
+        // Generate upload URL that expires in 1 hour
+        return await ctx.storage.generateUploadUrl()
+    },
+})
+
+export const removeMoodBoardImage = mutation({
+    args: {
+        projectId: v.id('projects'),
+        storageId: v.id('_storage'),
+    },
+    handler: async (ctx, { projectId, storageId }) => {
+        const userId = await getAuthUserId(ctx)
+        if (!userId) {
+            throw new Error('Not authenticated')
+        }
+
+        // Get the project and verify ownership
+        const project = await ctx.db.get(projectId)
+        if (!project) {
+            throw new Error('Project not found ')
+        }
+
+        if (project.userId !== userId) {
+            throw new Error('Access denied')
+        }
+
+        const currentImages = project.moodBoardImages || []
+        const updatedImages = currentImages.filter((id) => id !== storageId)
+
+
+        // Remove the storage ID from the project's array
+        await ctx.db.patch(projectId, {
+            moodBoardImages: updatedImages,
+            lastModified: Date.now()
+        })
+
+        try {
+            // Delete the file from storage
+            await ctx.storage.delete(storageId)
+        } catch (error) {
+            console.error(`Failed to delete file from storage : ${storageId}`, error)
+        }
+        return { success: true, imageCount: updatedImages.length }
+    },
+
+})
+
+
+export const addMoodBoardImage = mutation({
+    args: {
+        projectId: v.id('projects'),
+        storageId: v.id('_storage'),
+    },
+    handler: async (ctx, { projectId, storageId }) => {
+        const userId = await getAuthUserId(ctx)
+        if (!userId) {
+            throw new Error('Not authenticated')
+        }
+        // Get the project and verify ownership
+        const project = await ctx.db.get(projectId)
+        if (!project) {
+            throw new Error('Project not found')
+        }
+
+        if (project.userId !== userId) {
+            throw new Error('Access denied')
+        }
+
+        const currentImages = project.moodBoardImages || []
+        if (currentImages.length >= 5) {
+            throw new Error('Maximum 5 mood board images allowed')
+        }
+        const updatedImages = [...currentImages, storageId]
+        await ctx.db.patch(projectId, {
+            moodBoardImages: updatedImages,
+            lastModified: Date.now(),
+        })
+
+        return { success: true, imageCount: updatedImages.length }
     },
 })
