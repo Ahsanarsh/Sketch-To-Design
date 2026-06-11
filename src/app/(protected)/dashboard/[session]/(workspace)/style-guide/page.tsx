@@ -67,7 +67,7 @@ const Page = async (props: props) => {
         )}
       </TabsContent>
       <TabsContent value="typography">
-        {/* <StyleGuideTypography typographyGuide={typographySections} /> */}
+        <StyleGuideTypography typographyGuide={typographyGuide} />
       </TabsContent>
       <TabsContent value="moodboard">
         <MoodBoard guideImages={guideImages} />

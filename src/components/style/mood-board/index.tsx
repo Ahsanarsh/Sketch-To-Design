@@ -3,8 +3,10 @@
 import { useMoodBoard } from "@/hooks/use-styles";
 import { cn } from "@/lib/utils";
 import { MoodBoardImage } from "@/redux/api/style-guide";
-import React from "react";
+import React, { useRef } from "react";
 import ImagesBoard from "./images.board";
+import { Button } from "@/components/ui/button";
+import { Upload } from "lucide-react";
 
 type Props = {
   guideImages: MoodBoardImage[];
@@ -20,6 +22,11 @@ const MoodBoard = ({ guideImages }: Props) => {
     handleFileInput,
     canAddMore,
   } = useMoodBoard(guideImages);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     //TODO: wire up dragactive and handle events
@@ -113,7 +120,46 @@ const MoodBoard = ({ guideImages }: Props) => {
             </div>
           </>
         )}
+        {images.length === 0 && (
+          <div className="relative z-10 space-y-6">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
+              <Upload className="w-8 h-8 text-muted-foreground" />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-medium text-foreground">
+                Drop your images here
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Drag and drop up to 5 images to build your mood board
+              </p>
+            </div>
+
+            <Button onClick={handleUploadClick} variant="outline">
+              <Upload className="w-4 h-4 mr-2" />
+              Choose Files
+            </Button>
+          </div>
+        )}
+        {images.length > 0 && canAddMore && (
+          <div className="absolute bottom-6 right-6 z-20">
+            <Button onClick={handleUploadClick} size="sm" variant="outline">
+              <Upload className="w-4 h-4 mr-2" />
+              Add More
+            </Button>
+          </div>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleFileInput}
+          className="hidden"
+        />
       </div>
+
+      <Button className="w-fit">Generate with AI</Button>
     </div>
   );
 };

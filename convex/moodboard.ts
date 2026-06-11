@@ -83,10 +83,14 @@ export const removeMoodBoardImage = mutation({
         })
 
         try {
-            // Delete the file from storage
-            await ctx.storage.delete(storageId)
+            // Only delete from storage if the file still exists
+            const fileUrl = await ctx.storage.getUrl(storageId)
+            if (fileUrl) {
+                await ctx.storage.delete(storageId)
+            }
         } catch (error) {
-            console.error(`Failed to delete file from storage : ${storageId}`, error)
+            // Storage file may have already been deleted — this is non-critical
+            console.warn(`Storage file already removed or not found: ${storageId}`)
         }
         return { success: true, imageCount: updatedImages.length }
     },
