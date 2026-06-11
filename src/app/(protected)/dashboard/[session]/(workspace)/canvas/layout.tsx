@@ -1,8 +1,16 @@
+import ToolBar from "@/components/canvas/toolbar";
 import React from "react";
 
-type Props = {};
-
-const layout = (props: Props) => {
-  return <div>Layout</div>;
+type Props = {
+  children: React.ReactNode;
 };
-export default layout;
+
+const Layout = ({ children }: Props) => {
+  return (
+    <div className="w-full h-screen">
+      <ToolBar />
+      {children}
+    </div>
+  );
+};
+export default Layout;
